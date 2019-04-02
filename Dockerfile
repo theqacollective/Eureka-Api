@@ -1,9 +1,11 @@
-FROM maven:latest as maven-build
+FROM maven as build
 WORKDIR /build
-COPY . /build
+COPY pom.xml .
+RUN mvn verify --fail-never
+COPY . .
 RUN mvn clean package
-FROM java:8
-WORKDIR /opt/website
-EXPOSE 8761
-COPY --from=maven-build /build/target/EurekaDiscoveryServer-0.0.1-SNAPSHOT.jar discovery.jar
-ENTRYPOINT ["java", "-jar", "discovery.jar"]
+
+FROM openjdk:8
+COPY --from=build /build/target/EurekaDiscoveryServer-0.0.1-SNAPSHOT.jar  discovery.jar
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","discovery.jar"]
