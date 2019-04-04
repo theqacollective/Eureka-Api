@@ -6,5 +6,5 @@ RUN mvn clean package
 
 FROM openjdk:8
 COPY --from=build /build/target/EurekaDiscoveryServer-0.0.1-SNAPSHOT.jar  discovery.jar
-EXPOSE 8080
+EXPOSE 8761
 ENTRYPOINT ["java","-jar","discovery.jar"]
